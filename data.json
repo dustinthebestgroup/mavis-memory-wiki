@@ -10,7 +10,7 @@
       "name": "Memory Wiki",
       "status": "active",
       "summary": "A browsable static site cataloging all subjects, daily logs, and conversation history between Damon and Mavis.",
-      "url": "https://dustinthebestgroup.github.io/mavis-memory-wiki/",
+      "url": "https://aistaay.github.io/mavis-memory-wiki/",
       "tags": ["documentation", "github-pages", "static-site"],
       "subjectIds": ["memory-wiki"],
       "entries": [
@@ -21,7 +21,7 @@
             "Damon requested a memory wiki — a site to visit with subjects and daily logs",
             "Designed as static HTML/JS site with JSON data, hosted on GitHub Pages",
             "Created GitHub repo: dustinthebestgroup/mavis-memory-wiki",
-            "Enabled GitHub Pages — live at https://dustinthebestgroup.github.io/mavis-memory-wiki/",
+            "Enabled GitHub Pages — live at https://aistaay.github.io/mavis-memory-wiki/",
             "Subjects and daily logs are clickable with full detail pages",
             "Search functionality included"
           ]
