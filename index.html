@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mavis Memory Wiki</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --text-dim: #8b949e;
+    --accent: #58a6ff;
+    --accent-hover: #79c0ff;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+    --purple: #bc8cff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+  /* Header */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 { font-size: 20px; font-weight: 600; }
+  header h1 span { color: var(--accent); }
+  header nav a {
+    margin-left: 20px;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+  header nav a:hover, header nav a.active { color: var(--text); text-decoration: none; }
+
+  /* Search */
+  .search-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: var(--text);
+    font-size: 14px;
+    width: 240px;
+  }
+  .search-box:focus { outline: none; border-color: var(--accent); }
+
+  /* Layout */
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card h3 { font-size: 16px; margin-bottom: 6px; }
+  .card h3 .category {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: rgba(88,166,255,0.15);
+    color: var(--accent);
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .card p { font-size: 13px; color: var(--text-dim); }
+  .card .tags { margin-top: 10px; }
+  .card .tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(188,140,255,0.15);
+    color: var(--purple);
+    margin-right: 6px;
+  }
+  .card .date { font-size: 12px; color: var(--text-dim); margin-top: 8px; }
+
+  /* Detail view */
+  .detail-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .back-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .back-btn:hover { border-color: var(--accent); }
+  .detail-title { font-size: 24px; font-weight: 600; }
+  .detail-meta { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+
+  .entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .entry h4 { font-size: 15px; margin-bottom: 4px; }
+  .entry .entry-date { font-size: 12px; color: var(--yellow); margin-bottom: 12px; }
+  .entry ul { padding-left: 20px; }
+  .entry li { font-size: 13px; color: var(--text-dim); margin-bottom: 6px; }
+
+  /* Daily log */
+  .log-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .log-card:hover { border-color: var(--accent); }
+  .log-card .log-date { font-size: 12px; color: var(--green); font-weight: 600; }
+  .log-card h3 { font-size: 16px; margin: 6px 0; }
+  .log-card p { font-size: 13px; color: var(--text-dim); }
+  .log-card .highlights { margin-top: 12px; }
+  .log-card .highlights li {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    padding-left: 16px;
+    position: relative;
+    list-style: none;
+  }
+  .log-card .highlights li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-card .number { font-size: 32px; font-weight: 700; color: var(--accent); }
+  .stat-card .label { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+
+  /* Section headers */
+  .section-header {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 32px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-dim);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    header { flex-direction: column; gap: 12px; }
+    .search-box { width: 100%; }
+    .stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧠 <span>Mavis</span> Memory Wiki</h1>
+  <nav>
+    <a href="#" class="active" data-page="home">Home</a>
+    <a href="#" data-page="subjects">Subjects</a>
+    <a href="#" data-page="logs">Daily Logs</a>
+  </nav>
+  <input type="text" class="search-box" placeholder="Search..." id="searchBox">
+</header>
+
+<div class="container">
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="stats" id="stats"></div>
+    <h2 class="section-header">Recent Activity</h2>
+    <div id="recentLogs"></div>
+    <h2 class="section-header">All Subjects</h2>
+    <div id="allSubjects"></div>
+  </div>
+
+  <!-- SUBJECTS -->
+  <div class="page" id="page-subjects">
+    <h2 class="section-header">All Subjects</h2>
+    <div id="subjectsList"></div>
+  </div>
+
+  <!-- DAILY LOGS -->
+  <div class="page" id="page-logs">
+    <h2 class="section-header">Daily Logs</h2>
+    <div id="logsList"></div>
+  </div>
+
+  <!-- SUBJECT DETAIL -->
+  <div class="page" id="page-subject-detail">
+    <div class="detail-header">
+      <button class="back-btn" onclick="showPage('subjects')">← Back</button>
+      <div>
+        <div class="detail-title" id="subjectDetailTitle"></div>
+        <div class="detail-meta" id="subjectDetailMeta"></div>
+      </div>
+    </div>
+    <div id="subjectDetailEntries"></div>
+  </div>
+
+  <!-- LOG DETAIL -->
+  <div class="page" id="page-log-detail">
+    <div class="detail-header">
+      <button class="back-btn" onclick="showPage('logs')">← Back</button>
+      <div>
+        <div class="detail-title" id="logDetailTitle"></div>
+        <div class="detail-meta" id="logDetailMeta"></div>
+      </div>
+    </div>
+    <div id="logDetailEntries"></div>
+  </div>
+
+</div>
+
+<footer>
+  Mavis Memory Wiki · Last updated <span id="lastUpdated"></span> · Built with ❤️ by Mavis & Damon
+</footer>
+
+<script>
+let DATA = null;
+
+// Load data
+fetch('data.json')
+  .then(r => r.json())
+  .then(d => {
+    DATA = d;
+    render();
+  });
+
+function render() {
+  if (!DATA) return;
+  document.getElementById('lastUpdated').textContent = DATA.meta.lastUpdated;
+
+  // Stats
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card"><div class="number">${DATA.subjects.length}</div><div class="label">Subjects</div></div>
+    <div class="stat-card"><div class="number">${DATA.dailyLogs.length}</div><div class="label">Daily Logs</div></div>
+    <div class="stat-card"><div class="number">${DATA.subjects.reduce((a,s) => a + s.entries.length, 0)}</div><div class="label">Entries</div></div>
+  `;
+
+  // Recent logs
+  document.getElementById('recentLogs').innerHTML = DATA.dailyLogs.slice(0, 3).map(log => `
+    <div class="log-card" onclick="showLogDetail('${log.date}')">
+      <div class="log-date">${formatDate(log.date)}</div>
+      <h3>${log.title}</h3>
+      <p>${log.summary}</p>
+    </div>
+  `).join('');
+
+  // All subjects on home
+  document.getElementById('allSubjects').innerHTML = DATA.subjects.map(s => subjectCard(s)).join('');
+
+  // Subjects page
+  document.getElementById('subjectsList').innerHTML = DATA.subjects.map(s => subjectCard(s)).join('');
+
+  // Logs page
+  document.getElementById('logsList').innerHTML = DATA.dailyLogs.map(log => `
+    <div class="log-card" onclick="showLogDetail('${log.date}')">
+      <div class="log-date">${formatDate(log.date)}</div>
+      <h3>${log.title}</h3>
+      <p>${log.summary}</p>
+      <ul class="highlights">${log.highlights.map(h => `<li>${h}</li>`).join('')}</ul>
+    </div>
+  `).join('');
+}
+
+function subjectCard(s) {
+  return `
+    <div class="card" onclick="showSubjectDetail('${s.id}')">
+      <h3>${s.name}<span class="category">${s.category}</span></h3>
+      <p>${s.summary}</p>
+      <div class="tags">${s.tags.map(t => `<span class="tag">#${t}</span>`).join('')}</div>
+      <div class="date">${s.entries.length} entr${s.entries.length === 1 ? 'y' : 'ies'} · Last: ${s.entries.length ? s.entries[s.entries.length-1].date : '—'}</div>
+    </div>
+  `;
+}
+
+function showSubjectDetail(id) {
+  const s = DATA.subjects.find(x => x.id === id);
+  if (!s) return;
+  document.getElementById('subjectDetailTitle').textContent = s.name;
+  document.getElementById('subjectDetailMeta').textContent = `${s.category} · ${s.entries.length} entries`;
+  document.getElementById('subjectDetailEntries').innerHTML = s.entries.map(e => `
+    <div class="entry">
+      <h4>${e.title}</h4>
+      <div class="entry-date">${formatDate(e.date)}</div>
+      <ul>${e.notes.map(n => `<li>${n}</li>`).join('')}</ul>
+    </div>
+  `).join('');
+  showPage('subject-detail');
+}
+
+function showLogDetail(date) {
+  const log = DATA.dailyLogs.find(x => x.date === date);
+  if (!log) return;
+  document.getElementById('logDetailTitle').textContent = `${formatDate(log.date)} — ${log.title}`;
+  document.getElementById('logDetailMeta').textContent = log.summary;
+
+  // Build entries from linked subjects
+  let html = '';
+  log.subjects.forEach(subId => {
+    const s = DATA.subjects.find(x => x.id === subId);
+    if (!s) return;
+    s.entries.filter(e => e.date === log.date).forEach(e => {
+      html += `
+        <div class="entry">
+          <h4>${s.name}: ${e.title}</h4>
+          <div class="entry-date">${formatDate(e.date)}</div>
+          <ul>${e.notes.map(n => `<li>${n}</li>`).join('')}</ul>
+        </div>
+      `;
+    });
+  });
+
+  if (log.highlights.length) {
+    html += `
+      <div class="entry">
+        <h4>Highlights</h4>
+        <ul>${log.highlights.map(h => `<li>${h}</li>`).join('')}</ul>
+      </div>
+    `;
+  }
+
+  document.getElementById('logDetailEntries').innerHTML = html || '<p style="color:var(--text-dim)">No detailed entries for this day yet.</p>';
+  showPage('log-detail');
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('header nav a').forEach(a => a.classList.remove('active'));
+  const navMap = { 'home': 'home', 'subjects': 'subjects', 'logs': 'logs' };
+  if (navMap[id]) {
+    document.querySelector(`header nav a[data-page="${navMap[id]}"]`).classList.add('active');
+  }
+  window.scrollTo(0, 0);
+}
+
+function formatDate(d) {
+  const [y, m, day] = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[parseInt(m)-1]} ${parseInt(day)}, ${y}`;
+}
+
+// Search
+document.getElementById('searchBox').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  if (!q) { render(); return; }
+
+  const matchedSubjects = DATA.subjects.filter(s =>
+    s.name.toLowerCase().includes(q) || s.summary.toLowerCase().includes(q) || s.tags.some(t => t.includes(q))
+  );
+  const matchedLogs = DATA.dailyLogs.filter(l =>
+    l.title.toLowerCase().includes(q) || l.summary.toLowerCase().includes(q) || l.highlights.some(h => h.toLowerCase().includes(q))
+  );
+
+  document.getElementById('allSubjects').innerHTML = matchedSubjects.length
+    ? matchedSubjects.map(s => subjectCard(s)).join('')
+    : '<p style="color:var(--text-dim)">No matching subjects.</p>';
+
+  document.getElementById('recentLogs').innerHTML = matchedLogs.length
+    ? matchedLogs.map(log => `
+        <div class="log-card" onclick="showLogDetail('${log.date}')">
+          <div class="log-date">${formatDate(log.date)}</div>
+          <h3>${log.title}</h3>
+          <p>${log.summary}</p>
+        </div>
+      `).join('')
+    : '<p style="color:var(--text-dim)">No matching logs.</p>';
+
+  showPage('home');
+});
+
+// Nav clicks
+document.querySelectorAll('header nav a').forEach(a => {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    showPage(this.dataset.page);
+  });
+});
+</script>
+</body>
+</html>

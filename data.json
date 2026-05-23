@@ -1,0 +1,189 @@
+{
+  "meta": {
+    "title": "Mavis Memory Wiki",
+    "description": "A living record of conversations, subjects, and daily work between Damon and Mavis.",
+    "lastUpdated": "2026-05-23"
+  },
+  "subjects": [
+    {
+      "id": "hermes-migration",
+      "name": "Hermes Migration",
+      "category": "Infrastructure",
+      "summary": "Migrating from OpenClaw to Hermes Agent. Pairing Telegram, importing memory, skills, and workspace data.",
+      "tags": ["hermes", "openclaw", "migration", "telegram"],
+      "entries": [
+        {
+          "date": "2026-05-23",
+          "title": "Initial Setup and Migration",
+          "notes": [
+            "Approved Telegram pairing code TS29MV8D for Damon (ID: 8581500105)",
+            "Stopped Hermes gateway (blocked by approval, user handled manually)",
+            "Located latest OpenClaw backup: openclaw_migration_2026-03-05_18-20-44",
+            "Ran migration with --preset user-data --overwrite --yes",
+            "Imported: SOUL.md, MEMORY.md, USER.md, 3 skills (notion, qmd, sonoscli)",
+            "Pre-migration backup saved: pre-migration-2026-05-23-101253.zip (7.3 MB)",
+            "Telegram connection kept alive throughout migration"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "identity",
+      "name": "Identity & Setup",
+      "category": "Personal",
+      "summary": "Establishing Mavis's identity, preferences, and operating conventions.",
+      "tags": ["identity", "setup", "preferences"],
+      "entries": [
+        {
+          "date": "2026-05-23",
+          "title": "Named Mavis",
+          "notes": [
+            "Damon named the agent Mavis (previously unnamed OWL instance)",
+            "Saved to memory. Name reflects the previous machine name (Mavis.local) from OpenClaw setup."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "memory-wiki",
+      "name": "Memory Wiki",
+      "category": "Projects",
+      "summary": "Building a browsable static site that catalogs all subjects and daily logs of conversations and work.",
+      "tags": ["wiki", "github-pages", "documentation"],
+      "entries": [
+        {
+          "date": "2026-05-23",
+          "title": "Project Kickoff",
+          "notes": [
+            "Damon requested a memory wiki — a site to visit with subjects and daily logs",
+            "Design: static HTML/JS site, data in JSON, hosted on GitHub Pages",
+            "Subjects are clickable → detail pages with full conversation notes",
+            "Daily logs are chronological with click-through to details",
+            "Will be updated as new conversations happen"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "profitforge",
+      "name": "ProfitForge-TH",
+      "category": "Business",
+      "summary": "AI outbound lead-gen service focused on Thailand B2B market, email-first approach.",
+      "tags": ["business", "lead-gen", "thailand", "b2b"],
+      "entries": [
+        {
+          "date": "2026-02-25",
+          "title": "Project Started",
+          "notes": [
+            "Damon started ProfitForge-TH, a monetization initiative led by Mavis",
+            "AI outbound lead-gen service, Thailand focus, email-first approach"
+          ]
+        },
+        {
+          "date": "2026-02-27",
+          "title": "Pipeline Expansion",
+          "notes": [
+            "Pipeline expanded to 140 drafted Thailand B2B prospects",
+            "No sends/replies yet — bottleneck at approval/send stage"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "money-fast",
+      "name": "Money Fast",
+      "category": "Projects",
+      "summary": "Project with an operating standard focused on removing bottlenecks and shipping fast.",
+      "tags": ["money-fast", "operating-standard"],
+      "entries": [
+        {
+          "date": "2026-02-07",
+          "title": "Operating Standard Established",
+          "notes": [
+            "Operating standard documented in money-fast/10-mavis-operating-standard.md",
+            "Principles: remove bottlenecks, ship practical V1s fast, automate repeated work, keep memory tight"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frame",
+      "name": "Frame (Kamonporn)",
+      "category": "People",
+      "summary": "Secondary user — Kamonporn Lerdbunwattana (Frame), based in Nonthaburi, Thailand.",
+      "tags": ["frame", "kamonporn", "telegram"],
+      "entries": [
+        {
+          "date": "2026-02-18",
+          "title": "First Telegram Chat",
+          "notes": [
+            "Frame chose assistant name \"จีจี้\" during first Telegram chat",
+            "Thai primary language, limited English",
+            "Prefers supportive but challenging interaction style",
+            "Include occasional small English lessons during chats",
+            "Likely work requests: spreadsheets, trend finding, business analysis",
+            "Privacy: do not send Frame updates about Damon's projects unless she asks",
+            "Frame summary mode: concise summaries/alerts in Damon chat, not full transcripts"
+          ]
+        }
+      ]
+    }
+  ],
+  "dailyLogs": [
+    {
+      "date": "2026-05-23",
+      "title": "Migration Day",
+      "summary": "Set up Hermes, migrated from OpenClaw, established identity, started Memory Wiki project.",
+      "subjects": ["hermes-migration", "identity", "memory-wiki"],
+      "highlights": [
+        "Telegram pairing approved",
+        "OpenClaw backup migrated (7 items imported)",
+        "Named Mavis by Damon",
+        "Memory Wiki project kicked off",
+        "Output directory set to Google Drive Hermes folder"
+      ]
+    },
+    {
+      "date": "2026-02-27",
+      "title": "ProfitForge Pipeline & Frame Setup",
+      "summary": "Expanded ProfitForge pipeline to 140 prospects. Set up Frame's preferences and privacy rules.",
+      "subjects": ["profitforge", "frame"],
+      "highlights": [
+        "140 Thailand B2B prospects drafted",
+        "Frame summary mode established",
+        "Privacy rules set for Frame's data"
+      ]
+    },
+    {
+      "date": "2026-02-25",
+      "title": "ProfitForge Launch",
+      "summary": "Damon started ProfitForge-TH initiative.",
+      "subjects": ["profitforge"],
+      "highlights": [
+        "AI outbound lead-gen service started",
+        "Thailand B2B focus, email-first"
+      ]
+    },
+    {
+      "date": "2026-02-18",
+      "title": "Frame's First Chat",
+      "summary": "Frame's first interaction with her assistant on Telegram.",
+      "subjects": ["frame"],
+      "highlights": [
+        "Named assistant \"จีจี้\"",
+        "Interaction style and privacy preferences established"
+      ]
+    },
+    {
+      "date": "2026-02-07",
+      "title": "Identity Established",
+      "summary": "Damon shared personal info and established operating standards.",
+      "subjects": ["identity", "money-fast"],
+      "highlights": [
+        "Full legal name: Pakavich Buranabutr",
+        "Languages: English and Thai",
+        "Money Fast operating standard documented"
+      ]
+    }
+  ]
+}
