@@ -26,9 +26,8 @@
     line-height: 1.6;
   }
   a { color: var(--accent); text-decoration: none; }
-  a:hover { color: var(--accent-hover); text-decoration: underline; }
+  a:hover { color: var(--accent-hover); text-decoration: none; }
 
-  /* Header */
   header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
@@ -49,7 +48,6 @@
   }
   header nav a:hover, header nav a.active { color: var(--text); text-decoration: none; }
 
-  /* Search */
   .search-box {
     background: var(--bg);
     border: 1px solid var(--border);
@@ -61,7 +59,6 @@
   }
   .search-box:focus { outline: none; border-color: var(--accent); }
 
-  /* Layout */
   .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
   .page { display: none; }
   .page.active { display: block; }
@@ -88,6 +85,17 @@
     margin-left: 8px;
     vertical-align: middle;
   }
+  .card h3 .status {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .card h3 .status.active { background: rgba(63,185,80,0.15); color: var(--green); }
+  .card h3 .status.paused { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .card h3 .status.done { background: rgba(139,148,158,0.15); color: var(--text-dim); }
   .card p { font-size: 13px; color: var(--text-dim); }
   .card .tags { margin-top: 10px; }
   .card .tag {
@@ -99,6 +107,7 @@
     margin-right: 6px;
   }
   .card .date { font-size: 12px; color: var(--text-dim); margin-top: 8px; }
+  .card .url { font-size: 12px; margin-top: 6px; }
 
   /* Detail view */
   .detail-header {
@@ -132,7 +141,6 @@
   .entry ul { padding-left: 20px; }
   .entry li { font-size: 13px; color: var(--text-dim); margin-bottom: 6px; }
 
-  /* Daily log */
   .log-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -148,24 +156,27 @@
   .log-card p { font-size: 13px; color: var(--text-dim); }
   .log-card .highlights { margin-top: 12px; }
   .log-card .highlights li {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-bottom: 4px;
-    padding-left: 16px;
-    position: relative;
-    list-style: none;
+    font-size: 12px; color: var(--text-dim); margin-bottom: 4px;
+    padding-left: 16px; position: relative; list-style: none;
   }
   .log-card .highlights li::before {
-    content: "→";
-    position: absolute;
-    left: 0;
-    color: var(--accent);
+    content: "→"; position: absolute; left: 0; color: var(--accent);
   }
 
-  /* Stats */
+  /* Project section on subject detail */
+  .project-badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: rgba(63,185,80,0.15);
+    color: var(--green);
+    margin-bottom: 16px;
+  }
+
   .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 16px;
     margin-bottom: 32px;
   }
@@ -179,7 +190,6 @@
   .stat-card .number { font-size: 32px; font-weight: 700; color: var(--accent); }
   .stat-card .label { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
 
-  /* Section headers */
   .section-header {
     font-size: 18px;
     font-weight: 600;
@@ -188,7 +198,6 @@
     border-bottom: 1px solid var(--border);
   }
 
-  /* Footer */
   footer {
     text-align: center;
     padding: 32px;
@@ -198,7 +207,6 @@
     margin-top: 48px;
   }
 
-  /* Responsive */
   @media (max-width: 600px) {
     header { flex-direction: column; gap: 12px; }
     .search-box { width: 100%; }
@@ -212,6 +220,7 @@
   <h1>🧠 <span>Mavis</span> Memory Wiki</h1>
   <nav>
     <a href="#" class="active" data-page="home">Home</a>
+    <a href="#" data-page="projects">Projects</a>
     <a href="#" data-page="subjects">Subjects</a>
     <a href="#" data-page="logs">Daily Logs</a>
   </nav>
@@ -223,10 +232,21 @@
   <!-- HOME -->
   <div class="page active" id="page-home">
     <div class="stats" id="stats"></div>
+
+    <h2 class="section-header">Active Projects</h2>
+    <div id="homeProjects"></div>
+
     <h2 class="section-header">Recent Activity</h2>
     <div id="recentLogs"></div>
+
     <h2 class="section-header">All Subjects</h2>
     <div id="allSubjects"></div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="page" id="page-projects">
+    <h2 class="section-header">Projects</h2>
+    <div id="projectsList"></div>
   </div>
 
   <!-- SUBJECTS -->
@@ -241,15 +261,30 @@
     <div id="logsList"></div>
   </div>
 
+  <!-- PROJECT DETAIL -->
+  <div class="page" id="page-project-detail">
+    <div class="detail-header">
+      <button class="back-btn" onclick="showPage('projects')">← Back</button>
+      <div>
+        <div class="detail-title" id="projectDetailTitle"></div>
+        <div class="detail-meta" id="projectDetailMeta"></div>
+      </div>
+    </div>
+    <div id="projectDetailEntries"></div>
+    <h2 class="section-header" id="projectSubjectsHeader">Related Subjects</h2>
+    <div id="projectDetailSubjects"></div>
+  </div>
+
   <!-- SUBJECT DETAIL -->
   <div class="page" id="page-subject-detail">
     <div class="detail-header">
-      <button class="back-btn" onclick="showPage('subjects')">← Back</button>
+      <button class="back-btn" onclick="goBackSubject()">← Back</button>
       <div>
         <div class="detail-title" id="subjectDetailTitle"></div>
         <div class="detail-meta" id="subjectDetailMeta"></div>
       </div>
     </div>
+    <div id="subjectDetailProjectLink"></div>
     <div id="subjectDetailEntries"></div>
   </div>
 
@@ -262,6 +297,7 @@
         <div class="detail-meta" id="logDetailMeta"></div>
       </div>
     </div>
+    <div id="logDetailProjects"></div>
     <div id="logDetailEntries"></div>
   </div>
 
@@ -273,8 +309,8 @@
 
 <script>
 let DATA = null;
+let prevPage = 'subjects';
 
-// Load data
 fetch('data.json')
   .then(r => r.json())
   .then(d => {
@@ -286,43 +322,51 @@ function render() {
   if (!DATA) return;
   document.getElementById('lastUpdated').textContent = DATA.meta.lastUpdated;
 
-  // Stats
+  const totalEntries = DATA.subjects.reduce((a,s) => a + s.entries.length, 0) + DATA.projects.reduce((a,p) => a + p.entries.length, 0);
+
   document.getElementById('stats').innerHTML = `
+    <div class="stat-card"><div class="number">${DATA.projects.length}</div><div class="label">Projects</div></div>
     <div class="stat-card"><div class="number">${DATA.subjects.length}</div><div class="label">Subjects</div></div>
     <div class="stat-card"><div class="number">${DATA.dailyLogs.length}</div><div class="label">Daily Logs</div></div>
-    <div class="stat-card"><div class="number">${DATA.subjects.reduce((a,s) => a + s.entries.length, 0)}</div><div class="label">Entries</div></div>
+    <div class="stat-card"><div class="number">${totalEntries}</div><div class="label">Total Entries</div></div>
   `;
 
-  // Recent logs
-  document.getElementById('recentLogs').innerHTML = DATA.dailyLogs.slice(0, 3).map(log => `
-    <div class="log-card" onclick="showLogDetail('${log.date}')">
-      <div class="log-date">${formatDate(log.date)}</div>
-      <h3>${log.title}</h3>
-      <p>${log.summary}</p>
-    </div>
-  `).join('');
+  // Home projects
+  document.getElementById('homeProjects').innerHTML = DATA.projects.map(p => projectCard(p)).join('');
 
-  // All subjects on home
+  // Recent logs
+  document.getElementById('recentLogs').innerHTML = DATA.dailyLogs.slice(0, 3).map(log => logCard(log)).join('');
+
+  // All subjects on home (non-project ones first, then project-linked)
   document.getElementById('allSubjects').innerHTML = DATA.subjects.map(s => subjectCard(s)).join('');
+
+  // Projects page
+  document.getElementById('projectsList').innerHTML = DATA.projects.map(p => projectCard(p)).join('');
 
   // Subjects page
   document.getElementById('subjectsList').innerHTML = DATA.subjects.map(s => subjectCard(s)).join('');
 
   // Logs page
-  document.getElementById('logsList').innerHTML = DATA.dailyLogs.map(log => `
-    <div class="log-card" onclick="showLogDetail('${log.date}')">
-      <div class="log-date">${formatDate(log.date)}</div>
-      <h3>${log.title}</h3>
-      <p>${log.summary}</p>
-      <ul class="highlights">${log.highlights.map(h => `<li>${h}</li>`).join('')}</ul>
+  document.getElementById('logsList').innerHTML = DATA.dailyLogs.map(log => logCard(log)).join('');
+}
+
+function projectCard(p) {
+  return `
+    <div class="card" onclick="showProjectDetail('${p.id}')">
+      <h3>${p.name}<span class="status ${p.status}">${p.status}</span></h3>
+      <p>${p.summary}</p>
+      ${p.url ? `<div class="url">🌐 ${p.url}</div>` : ''}
+      <div class="tags">${p.tags.map(t => `<span class="tag">#${t}</span>`).join('')}</div>
+      <div class="date">${p.entries.length} entr${p.entries.length === 1 ? 'y' : 'ies'} · ${p.subjectIds.length} related subject${p.subjectIds.length === 1 ? '' : 's'}</div>
     </div>
-  `).join('');
+  `;
 }
 
 function subjectCard(s) {
+  const projectBadge = s.projectId ? `<span class="category" style="background:rgba(63,185,80,0.15);color:var(--green)">📁 ${DATA.projects.find(p => p.id === s.projectId)?.name || s.projectId}</span>` : '';
   return `
     <div class="card" onclick="showSubjectDetail('${s.id}')">
-      <h3>${s.name}<span class="category">${s.category}</span></h3>
+      <h3>${s.name}<span class="category">${s.category}</span>${projectBadge}</h3>
       <p>${s.summary}</p>
       <div class="tags">${s.tags.map(t => `<span class="tag">#${t}</span>`).join('')}</div>
       <div class="date">${s.entries.length} entr${s.entries.length === 1 ? 'y' : 'ies'} · Last: ${s.entries.length ? s.entries[s.entries.length-1].date : '—'}</div>
@@ -330,11 +374,60 @@ function subjectCard(s) {
   `;
 }
 
+function logCard(log) {
+  const projectBadges = (log.projects || []).map(pid => {
+    const p = DATA.projects.find(x => x.id === pid);
+    return p ? `<span class="category" style="background:rgba(63,185,80,0.15);color:var(--green);margin-left:6px;">📁 ${p.name}</span>` : '';
+  }).join('');
+  return `
+    <div class="log-card" onclick="showLogDetail('${log.date}')">
+      <div class="log-date">${formatDate(log.date)}</div>
+      <h3>${log.title}${projectBadges}</h3>
+      <p>${log.summary}</p>
+      <ul class="highlights">${log.highlights.map(h => `<li>${h}</li>`).join('')}</ul>
+    </div>
+  `;
+}
+
+function showProjectDetail(id) {
+  const p = DATA.projects.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('projectDetailTitle').innerHTML = `${p.name} <span class="status ${p.status}">${p.status}</span>`;
+  document.getElementById('projectDetailMeta').textContent = `${p.entries.length} entries · ${p.subjectIds.length} related subjects`;
+  document.getElementById('projectDetailEntries').innerHTML = p.entries.map(e => `
+    <div class="entry">
+      <h4>${e.title}</h4>
+      <div class="entry-date">${formatDate(e.date)}</div>
+      <ul>${e.notes.map(n => `<li>${n}</li>`).join('')}</ul>
+    </div>
+  `).join('');
+
+  // Related subjects
+  const relatedSubjects = DATA.subjects.filter(s => p.subjectIds.includes(s.id));
+  document.getElementById('projectSubjectsHeader').textContent = `Related Subjects (${relatedSubjects.length})`;
+  document.getElementById('projectDetailSubjects').innerHTML = relatedSubjects.length
+    ? relatedSubjects.map(s => subjectCard(s)).join('')
+    : '<p style="color:var(--text-dim)">No related subjects yet.</p>';
+
+  showPage('project-detail');
+}
+
 function showSubjectDetail(id) {
   const s = DATA.subjects.find(x => x.id === id);
   if (!s) return;
   document.getElementById('subjectDetailTitle').textContent = s.name;
   document.getElementById('subjectDetailMeta').textContent = `${s.category} · ${s.entries.length} entries`;
+
+  // Link to parent project if any
+  if (s.projectId) {
+    const p = DATA.projects.find(x => x.id === s.projectId);
+    if (p) {
+      document.getElementById('subjectDetailProjectLink').innerHTML = `<div class="project-badge" onclick="showProjectDetail('${p.id}')" style="cursor:pointer;">📁 Part of: ${p.name}</div>`;
+    }
+  } else {
+    document.getElementById('subjectDetailProjectLink').innerHTML = '';
+  }
+
   document.getElementById('subjectDetailEntries').innerHTML = s.entries.map(e => `
     <div class="entry">
       <h4>${e.title}</h4>
@@ -342,7 +435,13 @@ function showSubjectDetail(id) {
       <ul>${e.notes.map(n => `<li>${n}</li>`).join('')}</ul>
     </div>
   `).join('');
+
+  prevPage = 'subjects';
   showPage('subject-detail');
+}
+
+function goBackSubject() {
+  showPage(prevPage === 'project-detail' ? 'projects' : 'subjects');
 }
 
 function showLogDetail(date) {
@@ -351,7 +450,13 @@ function showLogDetail(date) {
   document.getElementById('logDetailTitle').textContent = `${formatDate(log.date)} — ${log.title}`;
   document.getElementById('logDetailMeta').textContent = log.summary;
 
-  // Build entries from linked subjects
+  // Project badges
+  const projectBadges = (log.projects || []).map(pid => {
+    const p = DATA.projects.find(x => x.id === pid);
+    return p ? `<span class="project-badge" style="margin-right:8px;cursor:pointer;" onclick="showProjectDetail('${p.id}')">📁 ${p.name}</span>` : '';
+  }).join('');
+  document.getElementById('logDetailProjects').innerHTML = projectBadges ? `<div style="margin-bottom:16px;">${projectBadges}</div>` : '';
+
   let html = '';
   log.subjects.forEach(subId => {
     const s = DATA.subjects.find(x => x.id === subId);
@@ -384,7 +489,7 @@ function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   document.querySelectorAll('header nav a').forEach(a => a.classList.remove('active'));
-  const navMap = { 'home': 'home', 'subjects': 'subjects', 'logs': 'logs' };
+  const navMap = { 'home': 'home', 'projects': 'projects', 'subjects': 'subjects', 'logs': 'logs' };
   if (navMap[id]) {
     document.querySelector(`header nav a[data-page="${navMap[id]}"]`).classList.add('active');
   }
@@ -402,6 +507,9 @@ document.getElementById('searchBox').addEventListener('input', function() {
   const q = this.value.toLowerCase();
   if (!q) { render(); return; }
 
+  const matchedProjects = DATA.projects.filter(p =>
+    p.name.toLowerCase().includes(q) || p.summary.toLowerCase().includes(q) || p.tags.some(t => t.includes(q))
+  );
   const matchedSubjects = DATA.subjects.filter(s =>
     s.name.toLowerCase().includes(q) || s.summary.toLowerCase().includes(q) || s.tags.some(t => t.includes(q))
   );
@@ -409,24 +517,19 @@ document.getElementById('searchBox').addEventListener('input', function() {
     l.title.toLowerCase().includes(q) || l.summary.toLowerCase().includes(q) || l.highlights.some(h => h.toLowerCase().includes(q))
   );
 
+  document.getElementById('homeProjects').innerHTML = matchedProjects.length
+    ? matchedProjects.map(p => projectCard(p)).join('')
+    : '<p style="color:var(--text-dim)">No matching projects.</p>';
   document.getElementById('allSubjects').innerHTML = matchedSubjects.length
     ? matchedSubjects.map(s => subjectCard(s)).join('')
-    : '<p style="color:var(--text-dim)">No matching subjects.</p>';
-
+    : '<p style="color="var(--text-dim)">No matching subjects.</p>';
   document.getElementById('recentLogs').innerHTML = matchedLogs.length
-    ? matchedLogs.map(log => `
-        <div class="log-card" onclick="showLogDetail('${log.date}')">
-          <div class="log-date">${formatDate(log.date)}</div>
-          <h3>${log.title}</h3>
-          <p>${log.summary}</p>
-        </div>
-      `).join('')
+    ? matchedLogs.map(log => logCard(log)).join('')
     : '<p style="color:var(--text-dim)">No matching logs.</p>';
 
   showPage('home');
 });
 
-// Nav clicks
 document.querySelectorAll('header nav a').forEach(a => {
   a.addEventListener('click', function(e) {
     e.preventDefault();
